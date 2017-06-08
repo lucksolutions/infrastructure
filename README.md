@@ -15,9 +15,6 @@ Provide security services for encryption, secret storage
 - Jenkins
 - CircleCI
 
-## Configuration Managment
-- Ansible
-
 ## Binary Repository
 - Artifactory
 
@@ -27,10 +24,10 @@ Provide security services for encryption, secret storage
 ## Automated Testing
 - ??
 
-# Design Decisions to be made
+# Design Decisions
 
 * Terraform to create infrastructure within our chosen cloud provider. Packer to create custom server images to be used by Terraform.
-* Custom AMIs vs. Using vendor AMIs and configuring the with Ansible.
+* Use immutable infrastructure. Use packer/docker to build images/containers for deployment.
 * Use vendor hosted systems vs. hosting our own in the cloud.
 
 # Implementation Roadmap

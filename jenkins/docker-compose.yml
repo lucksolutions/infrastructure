@@ -1,0 +1,17 @@
+version: '3'
+
+volumes:
+    jenkins-home:
+
+services:
+    #jenkins-data:
+      #image: lucksolutions/jenkins-data
+
+    jenkins-master:
+      image: lucksolutions/jenkins-master
+      volumes:
+        - jenkins-home:/var/jenkins_home
+      ports:
+        - 80:8080
+
+      

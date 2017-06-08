@@ -4,3 +4,9 @@
 
 # Module directory
 .terraform/
+
+# Variables
+**/*.tfvars
+
+# Packer Cache
+**/packer_cache/

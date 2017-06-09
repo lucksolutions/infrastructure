@@ -4,8 +4,12 @@ volumes:
     jenkins-home:
 
 services:
-    #jenkins-data:
-      #image: lucksolutions/jenkins-data
+    vault:
+      image: vault
+      cap_add:
+        - IPC_LOCK
+      ports:
+        - 8200:8200
 
     jenkins-master:
       image: lucksolutions/jenkins-master

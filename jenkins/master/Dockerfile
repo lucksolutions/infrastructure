@@ -77,4 +77,5 @@ RUN /usr/local/bin/install-plugins.sh \
     subversion:2.7.2 \
     ssh-slaves:1.17 \
     email-ext:2.57.2 \
-    blueocean:1.0.1
+    blueocean:1.0.1 \
+    hashicorp-vault-plugin:2.1.0

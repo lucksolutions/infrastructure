@@ -4,7 +4,7 @@ services:
     vault:
       environment:
         VAULT_DEV_ROOT_TOKEN_ID: vaultdev
-
+        
     jenkins-master:
         build:
           context: ./jenkins/master

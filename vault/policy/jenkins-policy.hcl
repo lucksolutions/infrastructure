@@ -6,5 +6,4 @@ path "secret/jenkins" {
 
 path "jenkins-host-ssh" {
   policy = "write"
-  capabilities = ["write", "read", "list"]
 }

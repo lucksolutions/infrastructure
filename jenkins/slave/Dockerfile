@@ -1,6 +1,8 @@
 #https://engineering.riotgames.com/news/jenkins-ephemeral-docker-tutorial
 FROM centos:7
 
+ENV VAULT_ADDR http://vault:8200
+
 # Install Essentials
 RUN yum update -y && \
          yum clean all
@@ -11,7 +13,13 @@ RUN yum install -y git && \
          yum install -y openssh-server && \
          yum install -y java-1.8.0-openjdk && \
          yum install -y sudo && \
+         yum install -y unzip && \
          yum clean all
+
+# Install Vault Client
+RUN wget https://releases.hashicorp.com/vault/0.7.3/vault_0.7.3_linux_amd64.zip
+RUN unzip -d /usr/local/bin vault_0.7.3_linux_amd64.zip
+RUN rm -f vault_0.7.3_linux_amd64.zip
 
 # gen dummy keys, centos doesn't autogen them like ubuntu does
 RUN /usr/bin/ssh-keygen -A
@@ -24,15 +32,19 @@ RUN useradd jenkins -m -s /bin/bash
 
 # Add public key for Jenkins login
 RUN mkdir /home/jenkins/.ssh
-COPY /files/authorized_keys /home/jenkins/.ssh/authorized_keys
+#COPY /files/authorized_keys /home/jenkins/.ssh/authorized_keys
 RUN chown -R jenkins /home/jenkins
 RUN chgrp -R jenkins /home/jenkins
-RUN chmod 600 /home/jenkins/.ssh/authorized_keys
+#RUN chmod 600 /home/jenkins/.ssh/authorized_keys
 RUN chmod 700 /home/jenkins/.ssh
 
 # Add the jenkins user to sudoers
 RUN echo "jenkins  ALL=(ALL)  ALL" >> etc/sudoers
 
-# Expose SSH port and run SSHD
+# Add entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod 740 /entrypoint.sh
+
+# Expose SSH port and run entrypoint script. This will start SSH Daemon
 EXPOSE 22
-CMD ["/usr/sbin/sshd","-D"]
+CMD ["/entrypoint.sh"]

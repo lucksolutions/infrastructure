@@ -4,8 +4,21 @@ services:
     vault:
       environment:
         VAULT_DEV_ROOT_TOKEN_ID: vaultdev
-        
+
     jenkins-master:
         build:
           context: ./jenkins/master
+  
+    jenkins-slave:
+        image: lucksolutions/jenkins-slave
+        build:
+          context: ./jenkins/slave
+        depends_on:
+          - vault
+        environment:
+          VAULT_TOKEN: vaultdev
+          VAULT_ADDR: http://vault:8200
+        ports:
+          - "22:22"
+
       

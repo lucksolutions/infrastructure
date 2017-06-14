@@ -2,7 +2,8 @@
 
 
 #If Vault option is configured...
-if [[ -z $VAULT_ADDR && -z $VAULT_TOKEN ]]; then
+if [[ -n $VAULT_TOKEN ]]; then
+    echo "Reading secrets from Vault..."
     vault auth $VAULT_TOKEN
 
     #Pull the client CA from Vault and add it to the SSHD config
@@ -14,9 +15,12 @@ if [[ -z $VAULT_ADDR && -z $VAULT_TOKEN ]]; then
     chmod 0640 /etc/ssh/ssh_host_rsa_key-cert.pub
 
     #Pull Jenkins Master ssh client key from vault and add to authorized keys
-    
+    vault read -field=ssh_public_key secret/jenkins > /home/jenkins/.ssh/authorized_keys
+    vault read -field=ssh_public_key_cert secret/jenkins >> /home/jenkins/.ssh/authorized_keys
+    chmod 600 /home/jenkins/.ssh/authorized_keys
 fi
 
 #Start the SSH Daemon
+echo "Starting SSH Daemon"
 /usr/sbin/sshd -D
 exit $?

@@ -13,10 +13,11 @@ if [[ -n $VAULT_TOKEN ]]; then
     #Sign our generated SSH key with our vault host CA
     cat /etc/ssh/ssh_host_rsa_key.pub | vault write -field=signed_key jenkins-host-ssh/sign/hostrole public_key=- cert_type=host > /etc/ssh/ssh_host_rsa_key-cert.pub
     chmod 0640 /etc/ssh/ssh_host_rsa_key-cert.pub
+    echo 'HostCertificate /etc/ssh/ssh_host_rsa_key-cert.pub' >> /etc/ssh/sshd_config
 
     #Pull Jenkins Master ssh client key from vault and add to authorized keys
     vault read -field=ssh_public_key secret/jenkins > /home/jenkins/.ssh/authorized_keys
-    vault read -field=ssh_public_key_cert secret/jenkins >> /home/jenkins/.ssh/authorized_keys
+    chown jenkins /home/jenkins/.ssh/authorized_keys
     chmod 600 /home/jenkins/.ssh/authorized_keys
 fi
 

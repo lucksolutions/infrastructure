@@ -16,6 +16,7 @@ vault write jenkins-client-ssh/roles/clientrole ttl=30m0s allow_user_certificate
 #Create Jenkins SSH key
 KEYPASS=$(openssl rand -base64 64)
 ssh-keygen -t rsa -b 4096 -q -N "$KEYPASS" -f /tmp/jenkins-ssh
+
 #Sign key with vault
 cat /tmp/jenkins-ssh.pub | vault write -field=signed_key jenkins-client-ssh/sign/clientrole public_key=- cert_type=user > /tmp/jenkins-ssh-cert.pub
 

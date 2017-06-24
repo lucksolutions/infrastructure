@@ -11,7 +11,7 @@ vault write -f auth/approle/role/jenkins/secret-id
 #Create SSH keys for jenkins slaves
 vault mount -path jenkins-client-ssh ssh
 vault write -f jenkins-client-ssh/config/ca
-vault write jenkins-client-ssh/roles/clientrole ttl=30m0s allow_user_certificates=true key_type=ca allowed_users=*
+vault write jenkins-client-ssh/roles/clientrole @jenkins-client-role.json
 
 #Create Jenkins SSH key
 KEYPASS=$(openssl rand -base64 64)
@@ -33,5 +33,7 @@ vault mount -path jenkins-host-ssh ssh
 vault write -f jenkins-host-ssh/config/ca
 vault mount-tune -max-lease-ttl=87600h jenkins-host-ssh
 vault write jenkins-host-ssh/roles/hostrole ttl=87600h allow_host_certificates=true key_type=ca
+
+echo "Jenkins private key pass: $KEYPASS"
 
 

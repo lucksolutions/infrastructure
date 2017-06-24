@@ -27,6 +27,9 @@ RUN /usr/bin/ssh-keygen -A
 # Set SSH Configuration to allow remote logins without /proc write access
 RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_loginuid.so/' /etc/pam.d/sshd
 
+# Add our SSHD config
+COPY sshd_config /etc/ssh/sshd_config
+
 # Create Jenkins User
 RUN useradd jenkins -m -s /bin/bash
 
